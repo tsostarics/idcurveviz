@@ -40,6 +40,8 @@ How does a given curve change with different intercept values?
 
 ```{r example}
 library(idcurveviz)
+# Polynomial terms given in order of appearance
+# i.e., here corresponds to 2x^1 + .2x^2 + -.5x^3
 plot_id_curve(betas = c(2, .2, -.5))
 ```
 
@@ -57,14 +59,6 @@ How does a curve change as a cubic effect is added?
 plot_interpolated_curves(from = c(2, 0, -5),
                          to = c(2, 0, 5),
                          nsteps = 10)
-```
-
-What are the values of those interpolated curves?
-
-```{r}
-table_interpolations(from = c(2, 0, -5),
-                     to = c(2, 0, 5),
-                     nsteps = 10)
 ```
 
 How good of an approximation can we get with an evenly-spaced 5 step continuum?
