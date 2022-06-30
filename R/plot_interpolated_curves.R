@@ -63,6 +63,7 @@ plot_interpolated_curves <- function(from = c(0,0),
                         color = "gray") +
     ggplot2::stat_function(fun = \(x) plogis(x),
                            color = 'black',
+                           linetype = 'dashed',
                            size = .75) +
     gradual_lines +
     ggplot2::theme_minimal() +
