@@ -67,3 +67,15 @@ plot_quantized_curve(betas = c(2, .2, -.1),
 ```
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+
+Lastly, we might wonder what the identification function would look like
+in a bivariate case with two continua that yield separate polynomials.
+
+``` r
+library(plotly)
+plot_bivariate_surface(betas1 = c(2, 0, -1),
+                       betas2 = c(-2, -.1, 0),
+                       show_quantized_points = TRUE)
+```
+
+<img src="man/figures/plotlyfig.png" width="100%" />

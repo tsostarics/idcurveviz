@@ -17,6 +17,7 @@ Imports:
     stats
 Suggests: 
     gt,
-    gtExtras
+    gtExtras,
+    plotly
 Enhances: 
     extraDistr
