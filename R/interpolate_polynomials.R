@@ -10,8 +10,8 @@
 #' @return `data.frame` of numeric values where columns correspond to polynomial
 #' terms and rows correspond to the interpolated values
 .interpolate_polynomials <- function(from = c(0,0),
-                                    to = c(5,2),
-                                    nsteps = 6) {
+                                     to = c(5,2),
+                                     nsteps = 6) {
   stopifnot(length(from) == length(to))
 
   lapply(seq_along(from),

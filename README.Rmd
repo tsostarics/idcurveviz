@@ -42,7 +42,7 @@ How does a given curve change with different intercept values?
 ```{r example}
 library(idcurveviz)
 # Polynomial terms given in order of appearance
-# i.e., here corresponds to 2x^1 + .2x^2 + -.5x^3
+# here betas corresponds to 2x^1 + .2x^2 + -.5x^3
 plot_id_curve(betas = c(2, .2, -.5))
 ```
 
@@ -72,6 +72,18 @@ plot_quantized_curve(betas = c(2, .2, -.1),
                       nsteps = 7,
                       quant_color = 'purple')
 ```
+
+What is the rate of change for an identification curve with a given polynomial?
+Where is the point at which the rate of change is highest or lowest?
+
+
+```{r}
+plot_id_derivative(betas = c(2.5, -.2, -.5),
+                   intercept = -.2,
+                   domain = c(-4, 4))
+```
+
+
 
 Lastly, we might wonder what the identification function would look like in a
 bivariate case with two continua that yield separate polynomials.

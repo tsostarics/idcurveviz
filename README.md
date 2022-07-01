@@ -68,6 +68,18 @@ plot_quantized_curve(betas = c(2, .2, -.1),
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 
+What is the rate of change for an identification curve with a given
+polynomial? Where is the point at which the rate of change is highest or
+lowest?
+
+``` r
+plot_id_derivative(betas = c(2.5, -.2, -.5),
+                   intercept = -.2,
+                   domain = c(-4, 4))
+```
+
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+
 Lastly, we might wonder what the identification function would look like
 in a bivariate case with two continua that yield separate polynomials.
 
