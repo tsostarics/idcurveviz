@@ -14,9 +14,13 @@
                                      nsteps = 6) {
   stopifnot(length(from) == length(to))
 
+  if (nsteps < 2) {
+    stop("Cannot interpolate with less than 2 steps (2 steps returns only endpoint functions)")
+  }
+
   lapply(seq_along(from),
          \(i) {
            seq(from[i], to[i], length.out = nsteps)
          }) |>
-    as.data.frame(col.names = seq_along(from))
+    as.data.frame(col.names = seq_along(from)-1L)
 }

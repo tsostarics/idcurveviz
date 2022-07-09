@@ -27,14 +27,19 @@ plot_id_curve <- function(betas,
                           intercepts,
                           colors = c('blue','gray','red'),
                           link = plogis,
-                          linesize = 1){
+                          linesize = 1,
+                          .use_b0 = FALSE){
 
   # The vector of beta terms is given in order of polynomial coefficients
   # e.g., c(3, 2, 1) = 3x + 2x^2 + 1x^3
-  get_vals <- .get_values_factory(betas, 0, link)
+  if (.use_b0){
+    get_vals <- .get_values_factory(betas, link)
+  } else {
+    get_vals <- .get_values_factory_freeintercept(betas, 0, link)
+  }
 
   # If no intercepts are given, use a preset range of values and colors
-  if (missing(intercepts)) {
+  if (missing(intercepts) & !.use_b0) {
     colors = c('black','blue','red','blue','red')
     intercepts = c(0,1,3,-1,-3)
 
@@ -43,32 +48,38 @@ plot_id_curve <- function(betas,
   }
 
   # If colors aren't provided for the given intercepts, use these values
-  if (missing(colors)) {
-    if (length(intercepts) == 1){
-      colors <- 'red'
-    } else {
-      colors <- grDevices::colorRampPalette(colors)(length(intercepts))
-    }
+  if (.use_b0){ # Only a single curve can be plotted with this option
+    colors <- 'blue'
+    intercepts <- betas[[1L]]
+  } else {
+    colors <- grDevices::colorRampPalette(colors)(length(intercepts))
   }
 
   # If c(...) is passed use ..., otherwise use the call passed to the function
   # Helps to avoid lots of numbers printed when eg seq(-3, 3, by = .1) is used
-  if (identical(eval(substitute(intercepts)[[1]]), base::c)){
+  if (identical(eval(substitute(intercepts)[[1L]]), base::c)){
     intercept_labels <- paste0(intercepts, collapse = ", ")
   } else {
     intercept_labels <- deparse(substitute(intercepts))
   }
 
-
-  stopifnot(length(colors) == length(intercepts))
-
   # Create ggplot layers for the curves for each intercept w/ the given colors
-  curves <- lapply(seq_along(colors),
-                   \(i) {
-                     ggplot2::stat_function(fun = \(x) get_vals(x, intercepts[i]),
-                                            color = colors[i],
-                                            size = linesize)
-                   })
+  if (.use_b0){
+    curves <- lapply(seq_along(colors),
+                     \(i) {
+                       ggplot2::stat_function(fun = \(x) get_vals(x),
+                                              color = colors[i],
+                                              size = linesize)
+                     })
+  } else {
+    curves <- lapply(seq_along(colors),
+                     \(i) {
+                       ggplot2::stat_function(fun = \(x) get_vals(x, intercepts[i]),
+                                              color = colors[i],
+                                              size = linesize)
+                     })
+  }
+
 
   # Paste together the coefficient terms
   plot_title <- paste0(betas,
@@ -89,6 +100,7 @@ plot_id_curve <- function(betas,
                            size = .75) +
     curves +
     ggplot2::theme_minimal() +
+    ggplot2::scale_x_continuous(breaks = -3:3) +
     ggplot2::ggtitle(plot_title,
                      subtitle = plot_subcaption) +
     ggplot2::theme(panel.grid = ggplot2::element_blank())

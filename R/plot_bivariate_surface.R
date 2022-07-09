@@ -8,8 +8,6 @@
 #'
 #' @param betas1 Numeric vector of polynomial term coefficients for polynomial 1
 #' @param betas2 Numeric vector of polynomial term coefficients for polynomial 2
-#' @param intercept1 Numeric intercept for polynomial 1
-#' @param intercept2 Numeric intercept for polynomial 2
 #' @param domain1 Numeric vector of length 2 for start and end points of the domain
 #' of polynomial 1, defaults to `c(-3, 3)`
 #' @param domain2 Numeric vector of length 2 for start and end points of the domain
@@ -35,10 +33,8 @@
 #'
 #' @return Plotly figure of a bivariate surface
 #' @export
-plot_bivariate_surface <- function(betas1 = c(1, .25, -.01),
-                                   betas2 = c(2, -.25, -.01),
-                                   intercept1 = 0,
-                                   intercept2 = 0,
+plot_bivariate_surface <- function(betas1 = c(0, 1, .25, -.01),
+                                   betas2 = c(0, 2, -.25, -.01),
                                    domain1 = c(-3, 3),
                                    domain2 = c(-3, 3),
                                    label1 = "X1",
@@ -54,11 +50,9 @@ plot_bivariate_surface <- function(betas1 = c(1, .25, -.01),
                                    show_quantized_points = TRUE) {
   requireNamespace("plotly", quietly = TRUE)
 
-  stopifnot(length(intercept1) == 1L)
-  stopifnot(length(intercept1) == 1L)
 
-  f1 <- .get_values_factory(betas1, intercept1, \(x) x)
-  f2 <- .get_values_factory(betas2, intercept2, \(x) x)
+  f1 <- .get_values_factory(betas1, \(x) x)
+  f2 <- .get_values_factory(betas2, \(x) x)
 
   stopifnot(length(domain1) == 2L)
   stopifnot(length(domain2) == 2L)
@@ -98,8 +92,6 @@ plot_bivariate_surface <- function(betas1 = c(1, .25, -.01),
 #' @param plotly_fig Plotly figure to add to, result of `plot_bivariate_surface`
 #' @param betas1 Numeric vector of polynomial term coefficients for polynomial 1
 #' @param betas2 Numeric vector of polynomial term coefficients for polynomial 2
-#' @param intercept1 Numeric intercept for polynomial 1
-#' @param intercept2 Numeric intercept for polynomial 2
 #' @param domain1 Numeric vector of length 2 for start and end points of the domain
 #' of polynomial 1, defaults to `c(-3, 3)`
 #' @param domain2 Numeric vector of length 2 for start and end points of the domain
@@ -125,10 +117,8 @@ plot_bivariate_surface <- function(betas1 = c(1, .25, -.01),
 #' @return Plotly figure with a point trace added
 #' @export
 add_quantized_surface <- function(plotly_fig,
-                                  betas1 = c(1, .25, -.01),
-                                  betas2 = c(2, -.25, -.01),
-                                  intercept1 = 0,
-                                  intercept2 = 0,
+                                  betas1 = c(0, 1, .25, -.01),
+                                  betas2 = c(0, 2, -.25, -.01),
                                   domain1 = c(-3, 3),
                                   domain2 = c(-3, 3),
                                   label1 = "X1",
@@ -142,8 +132,8 @@ add_quantized_surface <- function(plotly_fig,
                                   point_colors = c('blue','gray','red'),
                                   color_by = 1L,
                                   show_quantized_points = TRUE) {
-  f1 <- .get_values_factory(betas1, intercept1, \(x) x)
-  f2 <- .get_values_factory(betas2, intercept2, \(x) x)
+  f1 <- .get_values_factory(betas1, \(x) x)
+  f2 <- .get_values_factory(betas2, \(x) x)
 
   if (missing(steps1)) {
     x1seq_quant <- seq(domain1[1L], domain1[2L], length.out=nsteps)

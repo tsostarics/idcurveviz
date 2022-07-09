@@ -1,13 +1,12 @@
 #' Plot identification curve with rate of change curve
 #'
 #' Plots the identification curve with given polynomial term coefficients
-#' and intercept along with the first derivative approximation from
+#' along with the first derivative approximation from
 #' `numDeriv::grad`, reflecting the rate of change in the identification curve.
 #'
 #' Take note of the double y-axis.
 #'
 #' @param betas Numeric vector of polynomial term coefficients
-#' @param intercept Intercept to use
 #' @param link Link function, defaults to `plogis`
 #' @param domain Domain of the x-axis for the function, default `c(-3, 3)`
 #' @param smooth_by Precision of the numeric sequence between the domain ends
@@ -18,8 +17,7 @@
 #'
 #' @return A ggplot with the identification curve and rate of change curve
 #' @export
-plot_id_derivative <- function(betas = c(1,0,-10),
-                               intercept = 0,
+plot_id_derivative <- function(betas = c(0,1,0,-10),
                                link = plogis,
                                domain = c(-3, 3),
                                smooth_by = .1,
@@ -27,7 +25,7 @@ plot_id_derivative <- function(betas = c(1,0,-10),
                                deriv_color = "royalblue4") {
   requireNamespace("numDeriv", quietly = TRUE)
   requireNamespace("tidyr", quietly = TRUE)
-  curve_fx <- .get_values_factory(betas, intercept, link)
+  curve_fx <- .get_values_factory(betas, link)
   xseq <- seq(domain[1L], domain[2L], by = smooth_by)
 
   curves_df <- data.frame(x = xseq,

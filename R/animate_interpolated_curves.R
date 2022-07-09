@@ -4,7 +4,6 @@
 #'
 #' @param betas List of numeric vectors (all of same length)
 #' @param nsteps_between Number of steps to interpolate between, integer
-#' @param intercept Intercept to use
 #' @param link link function, defaults to `plogis`
 #' @param colors Colors to use for the gradient, recommended to provide as many
 #' colors as there are curves to interpolate between
@@ -17,8 +16,7 @@ animate_interpolated_curves <- function(betas = list(c(0,0,0),
                                                      c(2,0,0),
                                                      c(2,.5,0),
                                                      c(2,.5,-.15)),
-                                        nsteps_between = 10,
-                                        intercept = 0,
+                                        nsteps = 10,
                                         link = plogis,
                                         colors = c('black','blue','gray','red'),
                                         linesize = 1,
@@ -27,7 +25,7 @@ animate_interpolated_curves <- function(betas = list(c(0,0,0),
   requireNamespace("gganimate", quietly = TRUE)
 
   n_curves <- length(betas)
-  color_vals <- grDevices::colorRampPalette(colors)(nsteps_between*(n_curves-1))
+  color_vals <- grDevices::colorRampPalette(colors)(nsteps*(n_curves-1))
 
   stopifnot(n_curves > 1)
 
@@ -35,17 +33,17 @@ animate_interpolated_curves <- function(betas = list(c(0,0,0),
                         \(i)
                         .interpolate_polynomials(from = betas[[i]],
                                                  to = betas[[i+1]],
-                                                 nsteps = nsteps_between)
+                                                 nsteps)
   ) |>
     do.call(rbind, args = _)
 
-  poly_strings <- .format_polynomial_strings(curve_steps, intercept)
+  poly_strings <- .curve_df_to_strings(curve_steps)
 
   gradual_lines <-
     lapply(seq_len(nrow(curve_steps)),
            function(i){
              betas <- unlist(curve_steps[i,])
-             get_vals <- .get_values_factory(betas, intercept, link)
+             get_vals <- .get_values_factory(betas, link)
              ggplot2::stat_function(fun = \(x) get_vals(x),
                                     color = color_vals[i],
                                     size = linesize)
@@ -57,8 +55,8 @@ animate_interpolated_curves <- function(betas = list(c(0,0,0),
     gradual_lines +
     ggplot2::theme_minimal() +
     gganimate::transition_layers(from_blank = FALSE,
-                      keep_layers = rep(0,length(gradual_lines)),
-                      layer_names = poly_strings) +
+                                 keep_layers = rep(0,length(gradual_lines)),
+                                 layer_names = poly_strings) +
     animations +
     ggplot2::ggtitle("{next_layer}")
 
@@ -68,20 +66,21 @@ animate_interpolated_curves <- function(betas = list(c(0,0,0),
 #' Write out polynomial
 #'
 #' @param curve_df Data frame defining the curves
-#' @param intercept Intercept to use
 #'
 #' @return Character vector of polynomials
-.format_polynomial_strings <- function(curve_df, intercept = 0) {
+.curve_df_to_strings <- function(curve_df) {
   n_terms <- ncol(curve_df)
   vapply(seq_len(nrow(curve_df)),
-         \(i) {
-           paste(0,
-                 paste0(round(curve_df[i,],2),
-                        "x^",
-                        seq_len(n_terms),
-                        collapse = " + "),
-                 sep = " + "
-           )
-         },
+         \(i) .format_poly_string(curve_df[i,]),
          "char")
+}
+
+.format_poly_string <- function(betas) {
+  paste(round(betas[[1L]], 2L),
+        paste0(round(betas[-1L], 2L),
+               "x^",
+               seq_along(betas[-1L]),
+               collapse = " + "),
+        sep = " + "
+  )
 }

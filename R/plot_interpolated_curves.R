@@ -11,7 +11,6 @@
 #' @param from Numeric vector of polynomial terms to start at
 #' @param to Numeric vector of polynomial terms to end at
 #' @param nsteps Number of steps to interpolate between
-#' @param intercept Intercept to use
 #' @param link Link function to use, defaults to plogis (i.e., logit link)
 #' @param colors Discrete points for a continuous color gradient. Defaults
 #' to blue, gray, red (ascending from blue towards red)
@@ -24,10 +23,9 @@
 #' @examples
 #'
 #' plot_interpolated_curves(c(0,0,0), to = c(2, 1, -3))
-plot_interpolated_curves <- function(from = c(0,0),
-                                     to = c(5,2),
+plot_interpolated_curves <- function(from = c(0,0,0),
+                                     to = c(0,5,2),
                                      nsteps = 6L,
-                                     intercept = 0,
                                      link = plogis,
                                      colors = c('blue', 'gray', 'red'),
                                      linesize = 1){
@@ -41,19 +39,19 @@ plot_interpolated_curves <- function(from = c(0,0),
     lapply(seq_len(nsteps),
            function(i){
              betas <- unlist(betas[i,])
-             get_vals <- .get_values_factory(betas, intercept, link)
+             get_vals <- .get_values_factory(betas, link)
              ggplot2::stat_function(fun = \(x) get_vals(x),
                                     color = color_vals[i],
                                     size = linesize)
            }
     )
 
-  from_label <- paste0(from, paste("x", seq_along(from), sep = "^"), collapse = " + ")
-  to_label <- paste0(to, paste("x", seq_along(to), sep = "^"), collapse = " + ")
+  # redo these later
+  from_label <- .format_poly_string(from)
+  to_label <- .format_poly_string(to)
 
   plot_title <- glue::glue("from:  {from_label}  ({colors[1]})
-                           to:  {to_label}  ({colors[length(colors)]})
-                           intercept: {intercept}")
+                           to:  {to_label}  ({colors[length(colors)]})")
 
   ggplot2::ggplot(data.frame(x = c(-3, 3)),
                   ggplot2::aes(x = x)) +

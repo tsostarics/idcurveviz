@@ -8,9 +8,18 @@
 #' @param link Link function to use
 #'
 #' @return Function to calculate probabilities of given x values
-.get_values_factory <- function(betas, intercept = 0, link) {
-  stopifnot(length(intercept) == 1L)
+.get_values_factory <- function(betas, link = plogis) {
+  function(.x, .link = link)
+    .link(
+      vapply(.x,
+             \(x)
+             { sum(vapply(seq_along(betas), \(i) { betas[i] * x^(i-1L) }, 1.0)) },
+             1.0
+      )
+    )
+}
 
+.get_values_factory_freeintercept <- function(betas, intercept = 0, link = plogis) {
   function(.x, .intercept = intercept, .link = link)
     .link(
       vapply(.x,
@@ -20,4 +29,3 @@
       ) + .intercept
     )
 }
-

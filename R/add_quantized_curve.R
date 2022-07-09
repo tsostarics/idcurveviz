@@ -6,7 +6,6 @@
 #' quantizations.
 #'
 #' @param betas Numeric vector of polynomial term coefficients
-#' @param intercept Intercept to use
 #' @param nsteps Number of points to use in the quantized curve
 #' @param link Link function to use, defaults to `plogis`
 #' @param steps Specific steps to use (i.e., x-values to use)
@@ -27,8 +26,7 @@
 #'
 #' plot_quantized_curve(c(1,0,1), 0, 5) +
 #' add_quantized_curve(c(2,0,2), 0, 5, curve_color = "blue")
-add_quantized_curve <- function(betas = 1,
-                                intercept = 0,
+add_quantized_curve <- function(betas = c(0, 2, .3),
                                 nsteps = 5,
                                 link = plogis,
                                 steps,
@@ -51,7 +49,7 @@ add_quantized_curve <- function(betas = 1,
   }
 
   # Generates curve values for the given parameters
-  get_vals <- .get_values_factory(betas, intercept, link)
+  get_vals <- .get_values_factory(betas, link)
 
   # Calculates the points for the quantization lines/points
   quant_points <- data.frame(x = steps, y = get_vals(steps))
