@@ -97,7 +97,9 @@ animate_interpolated_curves(list(c(0, 0, 0, 0),
                                  c(0, 2, -1, 0),    # Add in quadratic term
                                  c(0, 2, -1, .1),   # Add in cubic term
                                  c(.5, 2, -1, .1)), # Add in intercept
-                            nsteps = 10)
+                            nsteps = 10,
+                            linesize = 2,
+                            colors = c('gray','black','blue','red','darkred'))
 ```
 
 <img src="man/figures/README-animated-curves-1.gif" width="100%" />
