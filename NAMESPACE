@@ -2,6 +2,7 @@
 
 export(add_quantized_curve)
 export(add_quantized_surface)
+export(animate_interpolated_curves)
 export(plot_bivariate_surface)
 export(plot_id_curve)
 export(plot_id_derivative)

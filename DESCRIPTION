@@ -22,4 +22,5 @@ Suggests:
     plotly,
     tidyr
 Enhances: 
-    extraDistr
+    extraDistr,
+    gganimate

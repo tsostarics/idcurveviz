@@ -33,7 +33,7 @@ plot_interpolated_curves <- function(from = c(0,0),
                                      linesize = 1){
   color_vals <- grDevices::colorRampPalette(colors)(nsteps)
 
-  stopifnot(length(from) == length(to))
+  stopifnot(length(from) == length(to)) # change later to pad 0s
 
   betas <- .interpolate_polynomials(from, to, nsteps)
 
@@ -70,3 +70,4 @@ plot_interpolated_curves <- function(from = c(0,0),
     ggplot2::labs(subtitle = plot_title) +
     ggplot2::theme(panel.grid = ggplot2::element_blank())
 }
+
