@@ -94,9 +94,9 @@ How does the identification curve change as we consider each polynomial term?
 ```{r animated-curves, dev.args=NULL}
 animate_interpolated_curves(list(c(0, 0, 0, 0),
                                  c(0, 2, 0, 0),     # Add in linear term
-                                 c(0, 2, -.2, 0),   # Add in quadratic term
-                                 c(0, 2, -2, .1),   # Add in cubic term
-                                 c(.5, 2, -2, .1)), # Add in intercept
+                                 c(0, 2, -1, 0),    # Add in quadratic term
+                                 c(0, 2, -1, .1),   # Add in cubic term
+                                 c(.5, 2, -1, .1)), # Add in intercept
                             nsteps = 10)
 ```
 
